@@ -269,6 +269,14 @@ class App extends preact.Component<{}, App.State> {
     };
   }
 
+  private onFileChange = async (ev: Event) => {
+    const input = ev.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.load(await file.arrayBuffer());
+    }
+  };
+
   async componentDidMount() {
     this.addDragHandlers();
     if (document.location.search) {
@@ -294,6 +302,18 @@ class App extends preact.Component<{}, App.State> {
           <p>
             Load a file by drag'n'drop'ing a <code>.wasm</code> file onto this page.
           </p>
+          <p>
+            Or select a file using the button below:
+          </p>
+          <input
+            type="file"
+            id="fileInput"
+            style={{ display: 'none' }}
+            onChange={this.onFileChange}
+          />
+          <button onClick={() => document.getElementById('fileInput')!.click()}>
+            Select File
+          </button>
         </main>
       </>
     );
